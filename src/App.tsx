@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import WhoItsFor from './components/WhoItsFor';
 import ServiceOffering from './components/ServiceOffering';
@@ -32,7 +33,8 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-transparent overflow-hidden">
+      <Navbar />
       <Hero onCTAClick={scrollToForm} />
       <WhoItsFor />
       <ServiceOffering />

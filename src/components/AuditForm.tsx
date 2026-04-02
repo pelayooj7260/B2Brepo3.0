@@ -1,8 +1,11 @@
 import { useState, FormEvent } from 'react';
-import { Send } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Send, ArrowRight, ArrowLeft } from 'lucide-react';
 import { submitAuditRequest, type AuditRequest } from '../lib/submitForm';
+import { AnimatedButton } from './ui/AnimatedButton';
 
 export default function AuditForm() {
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<AuditRequest>({
     name: '',
     email: '',
@@ -12,14 +15,23 @@ export default function AuditForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+  const handleNext = () => setStep(s => s + 1);
+  const handlePrev = () => setStep(s => s - 1);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (step < 3) {
+      handleNext();
+      return;
+    }
+    
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
     try {
       await submitAuditRequest(formData);
       setSubmitStatus('success');
+      setStep(4);
       setFormData({ name: '', email: '', company: '', message: '' });
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -29,107 +41,149 @@ export default function AuditForm() {
     }
   };
 
+  const formVariants: any = {
+    hidden: { opacity: 0, x: 50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    exit: { opacity: 0, x: -50, transition: { duration: 0.3 } }
+  };
+
   return (
-    <section id="audit-form" className="py-32 px-6">
-      <div className="max-w-3xl mx-auto">
-        <div className="fade-in-up mb-16 text-center">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8">
-            Request Your Audit
-          </h2>
-          <p className="text-xl text-gray-300 leading-relaxed">
-            Share a bit about your business and the challenges you're facing.
-            We'll review and get back to you within 48 hours.
-          </p>
+    <section id="audit-form" className="relative py-32 px-6 overflow-hidden">
+      <div className="max-w-3xl mx-auto relative z-10">
+        <div className="mb-16 text-center">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-bold text-[#F4F1EB] mb-6"
+          >
+            Let's start the conversation
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-xl text-[#F4F1EB]/70 leading-relaxed font-light"
+          >
+            Share a bit about your business. We'll review and get back to you within 48 hours.
+          </motion.p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 fade-in-up" style={{ animationDelay: '100ms' }}>
-          <div>
-            <label htmlFor="name" className="block text-lg text-gray-300 mb-2">
-              Your Name *
-            </label>
-            <input
-              type="text"
-              id="name"
-              required
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-6 py-4 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-lg focus:outline-none focus:border-white transition-colors"
-              placeholder="John Smith"
-            />
-          </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="bg-white/5 backdrop-blur-xl border border-[#34D399]/20 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden min-h-[400px]"
+        >
+          <form onSubmit={handleSubmit} className="flex flex-col h-full justify-between">
+            <AnimatePresence mode="wait">
+              {step === 1 && (
+                <motion.div key="step1" variants={formVariants} initial="hidden" animate="visible" exit="exit" className="space-y-8 flex-1">
+                  <h3 className="text-2xl font-bold text-[#F4F1EB] mb-6">First, who are we speaking with?</h3>
+                  <div>
+                    <label htmlFor="name" className="block text-lg text-[#F4F1EB]/80 mb-3 font-light">Your Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-6 py-4 bg-[#0B192C]/50 border border-[#34D399]/30 rounded-xl text-white text-lg focus:outline-none focus:border-[#34D399] transition-colors focus:bg-[#0B192C]"
+                      placeholder="Jane Doe"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-lg text-[#F4F1EB]/80 mb-3 font-light">Email Address</label>
+                    <input
+                      type="email"
+                      id="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full px-6 py-4 bg-[#0B192C]/50 border border-[#34D399]/30 rounded-xl text-white text-lg focus:outline-none focus:border-[#34D399] transition-colors focus:bg-[#0B192C]"
+                      placeholder="jane@company.com"
+                    />
+                  </div>
+                </motion.div>
+              )}
 
-          <div>
-            <label htmlFor="email" className="block text-lg text-gray-300 mb-2">
-              Email Address *
-            </label>
-            <input
-              type="email"
-              id="email"
-              required
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-6 py-4 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-lg focus:outline-none focus:border-white transition-colors"
-              placeholder="john@company.com"
-            />
-          </div>
+              {step === 2 && (
+                <motion.div key="step2" variants={formVariants} initial="hidden" animate="visible" exit="exit" className="space-y-8 flex-1">
+                  <h3 className="text-2xl font-bold text-[#F4F1EB] mb-6">What team are you representing?</h3>
+                  <div>
+                    <label htmlFor="company" className="block text-lg text-[#F4F1EB]/80 mb-3 font-light">Company Name</label>
+                    <input
+                      type="text"
+                      id="company"
+                      required
+                      value={formData.company}
+                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                      className="w-full px-6 py-4 bg-[#0B192C]/50 border border-[#34D399]/30 rounded-xl text-white text-lg focus:outline-none focus:border-[#34D399] transition-colors focus:bg-[#0B192C]"
+                      placeholder="Acme Corp."
+                    />
+                  </div>
+                </motion.div>
+              )}
 
-          <div>
-            <label htmlFor="company" className="block text-lg text-gray-300 mb-2">
-              Company Name
-            </label>
-            <input
-              type="text"
-              id="company"
-              value={formData.company}
-              onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-              className="w-full px-6 py-4 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-lg focus:outline-none focus:border-white transition-colors"
-              placeholder="Acme Inc."
-            />
-          </div>
+              {step === 3 && (
+                <motion.div key="step3" variants={formVariants} initial="hidden" animate="visible" exit="exit" className="space-y-8 flex-1">
+                  <h3 className="text-2xl font-bold text-[#F4F1EB] mb-6">What's slowing you down?</h3>
+                  <div>
+                    <label htmlFor="message" className="block text-lg text-[#F4F1EB]/80 mb-3 font-light">Tell us about your situation</label>
+                    <textarea
+                      id="message"
+                      rows={4}
+                      required
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full px-6 py-4 bg-[#0B192C]/50 border border-[#34D399]/30 rounded-xl text-white text-lg focus:outline-none focus:border-[#34D399] transition-colors focus:bg-[#0B192C] resize-none"
+                      placeholder="What processes feel manual? What tools form your current stack?"
+                    />
+                  </div>
+                </motion.div>
+              )}
 
-          <div>
-            <label htmlFor="message" className="block text-lg text-gray-300 mb-2">
-              Tell us about your situation
-            </label>
-            <textarea
-              id="message"
-              rows={6}
-              value={formData.message}
-              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              className="w-full px-6 py-4 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-lg focus:outline-none focus:border-white transition-colors resize-none"
-              placeholder="What processes are slowing you down? What tools are you currently using? What would success look like?"
-            />
-          </div>
+              {step === 4 && submitStatus === 'success' && (
+                <motion.div key="success" variants={formVariants} initial="hidden" animate="visible" className="flex-1 flex flex-col items-center justify-center text-center space-y-6 py-10">
+                  <div className="w-20 h-20 bg-[#34D399]/20 rounded-full flex items-center justify-center text-[#34D399] mb-4 shadow-[0_0_30px_rgba(52,211,153,0.3)]">
+                    <Send className="w-10 h-10 ml-1" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-[#F4F1EB]">Message Received</h3>
+                  <p className="text-lg text-[#F4F1EB]/70 font-light">
+                    Thank you. We will review your workflows and reply within 48 hours.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-          {submitStatus === 'success' && (
-            <div className="p-6 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <p className="text-green-400 text-lg">
-                Thank you! We've received your request and will be in touch within 48 hours.
-              </p>
-            </div>
-          )}
-
-          {submitStatus === 'error' && (
-            <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <p className="text-red-400 text-lg">
-                Something went wrong. Please try again or email us directly.
-              </p>
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full group inline-flex items-center justify-center gap-3 bg-white text-black px-8 py-5 text-xl font-semibold rounded-lg hover:bg-gray-100 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Request'}
-            <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </button>
-
-          <p className="text-center text-gray-400 text-sm">
-            We respect your privacy. Your information will never be shared.
-          </p>
-        </form>
+            {step < 4 && (
+              <div className="mt-12 flex items-center justify-between pt-6 border-t border-[#34D399]/20">
+                {step > 1 ? (
+                  <button type="button" onClick={handlePrev} className="text-[#F4F1EB]/60 hover:text-[#34D399] font-medium transition-colors flex items-center gap-2">
+                    <ArrowLeft className="w-4 h-4" /> Back
+                  </button>
+                ) : (
+                  <div></div>
+                )}
+                
+                <AnimatedButton 
+                  type="submit" 
+                  disabled={isSubmitting} 
+                  variant="primary" 
+                  icon={step === 3 ? <Send className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
+                >
+                  {isSubmitting ? 'Sending...' : step === 3 ? 'Send Details' : 'Continue'}
+                </AnimatedButton>
+              </div>
+            )}
+            
+            {submitStatus === 'error' && step < 4 && (
+               <p className="text-red-400 mt-4 text-center">Something went wrong. Please try again.</p>
+            )}
+          </form>
+        </motion.div>
       </div>
     </section>
   );
