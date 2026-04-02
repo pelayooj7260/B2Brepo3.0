@@ -4,26 +4,26 @@ import { Zap, Clock, TrendingUp } from 'lucide-react';
 
 export default function ServiceOffering() {
   return (
-    <section id="benefits" className="relative py-32 px-6 overflow-hidden bg-gradient-to-b from-transparent to-[#0B192C]">
+    <section id="benefits" className="relative py-32 px-6 overflow-hidden bg-gradient-to-b from-transparent to-brand-bg">
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="text-center mb-20 space-y-6">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#34D399]/5 border border-[#34D399]/20 text-[#34D399] font-medium text-sm"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-brand-primary/5 border border-brand-primary/20 text-brand-primary font-medium text-sm"
           >
             <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#34D399] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#34D399]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-brand-primary"></span>
             </span>
             Automation Audit
           </motion.div>
-          <h2 className="text-4xl md:text-5xl lg:text-5xl font-bold text-[#F4F1EB] leading-tight">
+          <h2 className="text-4xl md:text-5xl lg:text-5xl font-bold text-brand-text leading-tight">
             Clear Roadmaps. <br />
-            <span className="text-[#34D399] font-light">Zero Guesswork.</span>
+            <span className="text-brand-primary font-light">Zero Guesswork.</span>
           </h2>
-          <p className="text-xl text-[#F4F1EB]/70 max-w-2xl mx-auto font-light leading-relaxed">
+          <p className="text-xl text-brand-text/70 max-w-2xl mx-auto font-light leading-relaxed">
             Before any commitment, we review your current workflows and identify specific opportunities where automation could elegantly save time.
           </p>
         </div>
@@ -58,11 +58,11 @@ export default function ServiceOffering() {
               className="h-full"
             >
               <GlassCard className="h-full flex flex-col items-start group">
-                <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-[#34D399]/10 to-transparent border border-[#34D399]/20 text-[#34D399] group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
+                <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-brand-primary/10 to-transparent border border-brand-primary/20 text-brand-primary group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
                   <feature.icon className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold text-[#F4F1EB] mb-3">{feature.title}</h3>
-                <p className="text-[#F4F1EB]/60 font-light leading-relaxed group-hover:text-[#F4F1EB]/80 transition-colors duration-300">
+                <h3 className="text-xl font-bold text-brand-text mb-3">{feature.title}</h3>
+                <p className="text-brand-text/60 font-light leading-relaxed group-hover:text-brand-text/80 transition-colors duration-300">
                   {feature.description}
                 </p>
               </GlassCard>

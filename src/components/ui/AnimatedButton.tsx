@@ -26,9 +26,9 @@ export function AnimatedButton({ children, variant = 'primary', icon, className 
   const baseStyles = "group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-medium rounded-full transition-colors duration-300 overflow-hidden";
   
   const variants = {
-    primary: "bg-[#34D399] text-[#0B192C] font-semibold hover:bg-[#6EE7B7] hover:shadow-[0_0_25px_rgba(52,211,153,0.4)]",
-    secondary: "bg-white/5 backdrop-blur-lg border border-[#34D399]/30 text-[#F4F1EB] hover:bg-[#34D399]/10 hover:border-[#34D399]/50 hover:shadow-[0_0_15px_rgba(52,211,153,0.3)]",
-    outline: "border-2 border-[#34D399] text-[#34D399] hover:bg-[#34D399]/10 hover:shadow-[0_0_15px_rgba(52,211,153,0.2)]"
+    primary: "bg-brand-primary text-brand-bg font-semibold hover:bg-[#6EE7B7] hover:shadow-[0_0_25px_rgba(52,211,153,0.4)]",
+    secondary: "bg-white/5 backdrop-blur-lg border border-brand-primary/30 text-brand-text hover:bg-brand-primary/10 hover:border-brand-primary/50 hover:shadow-[0_0_15px_rgba(52,211,153,0.3)]",
+    outline: "border-2 border-brand-primary text-brand-primary hover:bg-brand-primary/10 hover:shadow-[0_0_15px_rgba(52,211,153,0.2)]"
   };
 
   return (

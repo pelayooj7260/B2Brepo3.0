@@ -3,11 +3,18 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root[data-theme="dark"] {
     --color-primary: 52 211 153; /* Glassy Green: #34D399 */
     --color-secondary: 32 58 67; /* Deep Watery Blue: #203A43 */
-    --color-bg-dark: 11 25 44; /* Dark Navy Base: #0B192C */
-    --color-text-light: 244 241 235; /* Sandy White: #F4F1EB */
+    --color-bg: 11 25 44;        /* Dark Navy Base: #0B192C */
+    --color-text: 244 241 235;   /* Sandy White: #F4F1EB */
+  }
+
+  :root[data-theme="light"], :root {
+    --color-primary: 32 58 67; /* Deep Blue becomes primary */
+    --color-secondary: 52 211 153; /* Green becomes secondary */
+    --color-bg: 244 241 235; /* Sandy White Background */
+    --color-text: 11 25 44; /* Dark Navy Text */
   }
 
   html {
@@ -25,18 +32,20 @@
     position: relative;
   }
 
-  /* Global noise texture overlay */
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  /* Global noise texture overlay - desktop only for performance */
+  @media (min-width: 768px) {
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
   }
 
   /* Custom Scrollbar - Tranquil Theme */
@@ -61,7 +70,7 @@
   }
   
   .text-glow {
-    text-shadow: 0 0 10px rgba(52, 211, 153, 0.4), 0 0 20px rgba(52, 211, 153, 0.2);
+    text-shadow: 0 0 15px rgba(var(--color-primary) / 0.6), 0 0 30px rgba(var(--color-primary) / 0.3);
   }
 
   .bg-glow {
@@ -77,5 +86,10 @@
   .fade-in-up.visible {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  .mask-image-gradient {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
   }
 }

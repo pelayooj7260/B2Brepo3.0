@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   return (
@@ -16,12 +17,13 @@ export default function Navbar() {
             </div>
             <span className="text-white font-bold text-xl tracking-tight">AutoSys</span>
           </div>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#how-it-works" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">How it Works</a>
-            <a href="#benefits" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Benefits</a>
+          <div className="hidden md:flex items-center gap-6">
+            <a href="#how-it-works" className="text-sm font-medium text-brand-text/80 hover:text-brand-text transition-colors">How it Works</a>
+            <a href="#benefits" className="text-sm font-medium text-brand-text/80 hover:text-brand-text transition-colors">Benefits</a>
+            <ThemeToggle />
             <button 
               onClick={() => document.getElementById('audit-form')?.scrollIntoView({ behavior: 'smooth' })}
-              className="text-sm font-medium bg-white/10 hover:bg-white/20 border border-white/10 px-4 py-2 rounded-lg text-white transition-all"
+              className="text-sm font-medium bg-brand-text/10 hover:bg-brand-text/20 border border-brand-text/10 px-4 py-2 rounded-lg text-brand-text transition-all"
             >
               Get Started
             </button>
