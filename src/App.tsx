@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import CustomCursor from './components/ui/CustomCursor';
+import BackgroundCarousel from './components/BackgroundCarousel';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import LogosMarquee from './components/ui/LogosMarquee';
@@ -42,6 +43,7 @@ function App() {
   return (
     <HelmetProvider>
       <div className="min-h-screen bg-transparent overflow-hidden">
+        <BackgroundCarousel />
         <CustomCursor />
         <Helmet>
           <title>Thorne | Automated B2B Infrastructure</title>

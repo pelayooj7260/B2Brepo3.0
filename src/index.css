@@ -3,18 +3,18 @@
 @tailwind utilities;
 
 @layer base {
-  :root[data-theme="dark"] {
-    --color-primary: 52 211 153; /* Glassy Green: #34D399 */
-    --color-secondary: 32 58 67; /* Deep Watery Blue: #203A43 */
-    --color-bg: 11 25 44;        /* Dark Navy Base: #0B192C */
-    --color-text: 244 241 235;   /* Sandy White: #F4F1EB */
+  :root[data-theme="dark"], :root {
+    --color-primary: 212 175 55;   /* Gold Accent: #D4AF37 */
+    --color-secondary: 78 95 112;  /* Muted Blue/Slate: #4E5F70 */
+    --color-bg: 11 18 33;        /* Deep Navy Blue: #0B1221 */
+    --color-text: 255 255 255;   /* Pure White Text: #FFFFFF */
   }
 
-  :root[data-theme="light"], :root {
-    --color-primary: 32 58 67; /* Deep Blue becomes primary */
-    --color-secondary: 52 211 153; /* Green becomes secondary */
-    --color-bg: 244 241 235; /* Sandy White Background */
-    --color-text: 11 25 44; /* Dark Navy Text */
+  :root[data-theme="light"] {
+    --color-primary: 212 175 55;   /* Gold Accent */
+    --color-secondary: 78 95 112;  /* Muted Blue */
+    --color-bg: 15 25 45;        /* Slightly lighter Navy for contrast */
+    --color-text: 255 255 255;   /* Text remains white */
   }
 
   html {
@@ -27,9 +27,10 @@
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: rgb(var(--color-bg-dark));
-    color: rgb(var(--color-text-light));
+    background-color: rgb(var(--color-bg));
+    color: rgb(var(--color-text));
     position: relative;
+    overflow-x: hidden;
   }
 
   /* Global noise texture overlay - desktop only for performance */
@@ -48,25 +49,31 @@
     }
   }
 
-  /* Custom Scrollbar - Tranquil Theme */
+  /* Custom Scrollbar - Dark & Gold Theme */
   ::-webkit-scrollbar {
     width: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #0B192C; 
+    background: #0B1221; 
   }
   ::-webkit-scrollbar-thumb {
-    background: #203A43; 
+    background: #4E5F70; 
     border-radius: 5px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #34D399; 
+    background: #D4AF37; 
+  }
+
+  /* Background Carousel Animation */
+  @keyframes background-slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
 }
 
 @layer utilities {
   .glass-card {
-    @apply bg-[#F4F1EB]/5 backdrop-blur-xl border border-[#34D399]/20 shadow-2xl;
+    @apply bg-black/20 backdrop-blur-xl border border-[#D4AF37]/20 shadow-2xl;
   }
   
   .text-glow {
@@ -74,7 +81,7 @@
   }
 
   .bg-glow {
-    box-shadow: 0 0 15px rgba(52, 211, 153, 0.3), 0 0 30px rgba(52, 211, 153, 0.1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3), 0 0 30px rgba(212, 175, 55, 0.1);
   }
 
   .fade-in-up {
