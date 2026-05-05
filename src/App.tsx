@@ -63,6 +63,13 @@ function App() {
         <FAQ />
         <AuditForm />
         <Footer />
+        <button
+          onClick={() => { throw new Error("Sentry Test Error: DEBUG_SENTRY_TRIGGER clicked"); }}
+          className="fixed bottom-2 right-2 z-[9999] opacity-0 hover:opacity-100 transition-opacity duration-300 bg-slate-900/80 text-[10px] text-slate-400 p-2 rounded border border-slate-700/50 font-mono"
+          aria-label="Debug Sentry Trigger"
+        >
+          DEBUG_SENTRY_TRIGGER
+        </button>
       </div>
     </HelmetProvider>
   );
