@@ -11,7 +11,10 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "dependencies": {
+    "@sentry/react": "^10.48.0",
+    "@sentry/tracing": "^7.120.4",
     "framer-motion": "^12.38.0",
+    "lenis": "^1.3.23",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -21,6 +24,7 @@
     "@eslint/js": "^9.9.1",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
+    "@vercel/node": "^5.7.15",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.18",
     "eslint": "^9.9.1",

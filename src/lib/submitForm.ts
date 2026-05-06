@@ -9,10 +9,17 @@
 // If VITE_FORM_MODE is unset, defaults to "api".
 
 export interface AuditRequest {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   company?: string;
   message?: string;
+  gdprConsent: boolean;
+  diagnosticData?: {
+    scale: string;
+    sector: string;
+    score: number;
+  };
 }
 
 const MODE = (import.meta.env.VITE_FORM_MODE || 'api') as 'api' | 'webhook' | 'mailto';
@@ -22,10 +29,10 @@ const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL || 'hello@yourcompany.c
 
 export async function submitAuditRequest(data: AuditRequest): Promise<void> {
   if (MODE === 'mailto') {
-    // Fallback: no backend at all — open mail client
-    const subject = encodeURIComponent(`Audit Request from ${data.name}`);
+    const fullName = `${data.firstName} ${data.lastName}`;
+    const subject = encodeURIComponent(`Audit Request from ${fullName}`);
     const body = encodeURIComponent(
-      `Name: ${data.name}\nEmail: ${data.email}\nCompany: ${data.company || 'N/A'}\n\n${data.message || ''}`
+      `Name: ${fullName}\nEmail: ${data.email}\nCompany: ${data.company || 'N/A'}\nGDPR Consent: ${data.gdprConsent ? 'Yes' : 'No'}\n\n${data.message || ''}`
     );
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
     return;

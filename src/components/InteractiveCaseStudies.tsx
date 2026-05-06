@@ -1,90 +1,83 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, ClipboardList, Zap } from 'lucide-react';
+import { ArrowRight, ClipboardList, Zap, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 export default function InteractiveCaseStudies() {
   return (
-    <section className="py-24 px-6 relative z-10 bg-brand-bg/50 border-y border-brand-primary/10">
+    <section className="py-32 px-6 relative overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-brand-text mb-6">The Automation Advantage</h2>
-          <p className="text-xl text-brand-text/70 font-light max-w-2xl mx-auto">
-            See how your workflow evolves when you eliminate manual bottlenecks.
-          </p>
+          <span className="text-brand-primary font-bold tracking-[0.3em] text-xs uppercase">The Evolution</span>
+          <h2 className="text-4xl md:text-5xl font-outfit font-extrabold text-white mt-4">The Automation Advantage</h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-[1fr,auto,1fr] gap-8 items-center max-w-5xl mx-auto">
-          {/* Before */}
+        <div className="flex flex-col lg:flex-row gap-8 items-stretch max-w-5xl mx-auto relative">
+          {/* Background Decorative Line */}
+          <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/5 to-transparent hidden lg:block" />
+
+          {/* Manual Workflow */}
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="bg-red-500/5 border border-red-500/20 rounded-3xl p-8 h-full flex flex-col"
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="flex-1 bg-[#1A1A1A] border border-white/5 rounded-[2.5rem] p-10 flex flex-col relative group overflow-hidden"
           >
-            <div className="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center text-red-400 mb-6 border border-red-500/20">
-              <ClipboardList className="w-7 h-7" />
+            <div className="absolute inset-0 bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-white/40 mb-8 border border-white/10 group-hover:border-red-500/20 group-hover:text-red-400 transition-all">
+              <AlertTriangle className="w-7 h-7" />
             </div>
-            <h3 className="text-2xl font-bold text-brand-text mb-4">Manual Workflow</h3>
-            <ul className="space-y-4 text-brand-text/60 font-light mt-auto">
-              <li className="flex items-start gap-3">
-                <span className="text-red-400 mt-1">✗</span> Hours spent exporting/importing CSVs
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-400 mt-1">✗</span> High probability of human error
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-400 mt-1">✗</span> Siloed data across 5 different apps
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-400 mt-1">✗</span> Delayed reports holding up decisions
-              </li>
+            <h3 className="text-2xl font-outfit font-bold text-white mb-6">Manual Chaos</h3>
+            <ul className="space-y-6">
+              {[
+                "Hours lost to CSV exports",
+                "High risk of data pollution",
+                "Siloed communication",
+                "Static, outdated reporting"
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-4 text-white/40 font-light text-sm italic">
+                   <div className="w-1.5 h-1.5 rounded-full bg-red-500/30 mt-1.5" />
+                   {item}
+                </li>
+              ))}
             </ul>
           </motion.div>
 
-          {/* Arrow */}
-          <div className="hidden md:flex flex-col items-center justify-center text-brand-primary/50">
-            <motion.div
-              animate={{ x: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            >
-              <ArrowRight className="w-12 h-12 text-brand-primary drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]" />
-            </motion.div>
-          </div>
-          
-          <div className="flex md:hidden justify-center text-brand-primary/50 my-4 transform rotate-90">
-             <ArrowRight className="w-8 h-8 text-brand-primary" />
+          {/* Middle Transition Element */}
+          <div className="flex flex-col items-center justify-center py-4 lg:py-0 z-10">
+            <div className="w-12 h-12 rounded-full bg-brand-primary/20 backdrop-blur-xl border border-brand-primary/30 flex items-center justify-center text-brand-primary shadow-[0_0_20px_rgba(0,242,255,0.3)]">
+              <ArrowRight className="w-6 h-6" />
+            </div>
           </div>
 
-          {/* After */}
+          {/* Automated Solution */}
           <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="glass-card rounded-3xl p-8 h-full relative overflow-hidden flex flex-col bg-glow border-brand-primary/50"
+            initial={{ opacity: 0, scale: 1.05 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -10 }}
+            className="flex-1 glass-card-cyan rounded-[2.5rem] p-10 flex flex-col relative overflow-hidden shadow-[0_30px_60px_rgba(0,242,255,0.1)] transition-all duration-500"
           >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 blur-3xl rounded-full" />
-            
-            <div className="w-14 h-14 bg-brand-primary/20 rounded-2xl flex items-center justify-center text-brand-primary mb-6 border border-brand-primary/30 relative z-10">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-brand-primary/10 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="w-14 h-14 bg-brand-primary/20 rounded-2xl flex items-center justify-center text-brand-primary mb-8 border border-brand-primary/30 relative z-10">
               <Zap className="w-7 h-7" />
             </div>
-            <h3 className="text-2xl font-bold text-brand-text mb-4 relative z-10">Automated Solution</h3>
-            <ul className="space-y-4 text-brand-text/80 font-light mt-auto relative z-10">
-              <li className="flex items-start gap-3">
-                <span className="text-brand-primary mt-1">✓</span> Instant, real-time data syncing
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-brand-primary mt-1">✓</span> 100% accuracy, zero manual entry
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-brand-primary mt-1">✓</span> Single source of truth dashboard
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-brand-primary mt-1">✓</span> Automated triggers and alerts
-              </li>
+            <h3 className="text-2xl font-outfit font-bold text-white mb-6 relative z-10">Autonomous Harmony</h3>
+            <ul className="space-y-6 relative z-10">
+              {[
+                "Real-time ecosystem syncing",
+                "100% precision, zero errors",
+                "Unified command center",
+                "Predictive analytics flow"
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-4 text-white font-medium text-sm">
+                   <CheckCircle2 className="w-5 h-5 text-brand-primary shrink-0" />
+                   {item}
+                </li>
+              ))}
             </ul>
           </motion.div>
         </div>
