@@ -1,5 +1,5 @@
 import Lenis from 'lenis';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 
 import BackgroundCarousel from './components/BackgroundCarousel';
@@ -19,6 +19,12 @@ import AuditForm from './components/AuditForm';
 import Footer from './components/Footer';
 
 function App() {
+  const [diagnosticData, setDiagnosticData] = useState<{
+    scale: string;
+    sector: string;
+    score: number;
+  } | null>(null);
+
   useEffect(() => {
     // Initialize Lenis
     const lenis = new Lenis({
@@ -79,7 +85,7 @@ function App() {
         <Hero onCTAClick={scrollToForm} />
         <LogosMarquee />
         <WhoItsFor />
-        <BusinessDiagnostic />
+        <BusinessDiagnostic onComplete={(data) => setDiagnosticData(data)} />
         <ServiceOffering />
         <InteractiveCaseStudies />
         <Process />
@@ -87,7 +93,7 @@ function App() {
         <Credibility />
         <TestimonialsCarousel />
         <FAQ />
-        <AuditForm />
+        <AuditForm prefilledDiagnostic={diagnosticData} />
         <Footer />
         <button
           onClick={() => { throw new Error("Sentry Test Error: DEBUG_SENTRY_TRIGGER clicked"); }}

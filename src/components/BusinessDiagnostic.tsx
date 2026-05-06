@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, Users, Rocket, Globe, CheckCircle2, ChevronRight, Briefcase, ShoppingCart, Home, Cpu, HeartPulse, Palette } from 'lucide-react';
 
 type Step = 1 | 2 | 3;
 
-export default function BusinessDiagnostic() {
+interface BusinessDiagnosticProps {
+  onComplete?: (data: { scale: string; sector: string; score: number }) => void;
+}
+
+export default function BusinessDiagnostic({ onComplete }: BusinessDiagnosticProps) {
   const [step, setStep] = useState<Step>(1);
   const [scale, setScale] = useState<string>('');
   const [sector, setSector] = useState<string>('');
@@ -35,6 +39,16 @@ export default function BusinessDiagnostic() {
     // Logic for Gap Score
     return 84; // Mock score
   };
+
+  useEffect(() => {
+    if (step === 3 && onComplete) {
+      onComplete({
+        scale,
+        sector,
+        score: calculateScore(),
+      });
+    }
+  }, [step, scale, sector, onComplete]);
 
   return (
     <section id="diagnostic" className="py-24 px-6 relative">

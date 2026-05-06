@@ -1,9 +1,17 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, ArrowRight, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { submitAuditRequest, type AuditRequest } from '../lib/submitForm';
 
-export default function AuditForm() {
+interface AuditFormProps {
+  prefilledDiagnostic?: {
+    scale: string;
+    sector: string;
+    score: number;
+  } | null;
+}
+
+export default function AuditForm({ prefilledDiagnostic }: AuditFormProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<AuditRequest>({
     firstName: '',
@@ -15,6 +23,16 @@ export default function AuditForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Handle prefilled data
+  useEffect(() => {
+    if (prefilledDiagnostic) {
+      setFormData(prev => ({
+        ...prev,
+        diagnosticData: prefilledDiagnostic
+      }));
+    }
+  }, [prefilledDiagnostic]);
 
   const handleNext = () => setStep(s => s + 1);
   const handlePrev = () => setStep(s => s - 1);
@@ -34,7 +52,14 @@ export default function AuditForm() {
     setSubmitStatus('idle');
 
     try {
-      await submitAuditRequest(formData);
+      // Include the diagnostic data in the final submission
+      const submissionData = {
+        ...formData,
+        diagnosticData: prefilledDiagnostic || undefined,
+        source: prefilledDiagnostic ? 'business_diagnostic' : 'audit_form'
+      };
+
+      await submitAuditRequest(submissionData);
       setSubmitStatus('success');
       setStep(4);
       setFormData({ 
@@ -78,6 +103,15 @@ export default function AuditForm() {
           >
             Initiate the Protocol
           </motion.h2>
+          {prefilledDiagnostic && (
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-brand-primary/60 text-sm mt-4 font-mono uppercase tracking-widest"
+            >
+              Diagnostic Context Attached: {prefilledDiagnostic.score}% Friction detected
+            </motion.p>
+          )}
         </div>
 
         <motion.div 
