@@ -29,13 +29,11 @@ export default function FAQ() {
   };
 
   return (
-    <section className="py-24 px-6 relative z-10 bg-transparent">
+    <section className="py-32 px-6 relative overflow-hidden bg-brand-obsidian">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold text-brand-text mb-4">Frequently Asked Questions</h2>
-          <p className="text-xl text-brand-text/60 font-light">
-            Everything you need to know about our process and technology.
-          </p>
+          <span className="text-brand-primary font-bold tracking-[0.3em] text-xs uppercase">Knowledge Base</span>
+          <h2 className="text-4xl md:text-5xl font-outfit font-extrabold text-white mt-4">Frequently Asked Questions</h2>
         </div>
 
         <div className="space-y-4">
@@ -46,19 +44,19 @@ export default function FAQ() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="glass-card rounded-2xl overflow-hidden hover:bg-brand-text/10 transition-colors"
+              className="glass-card rounded-[2rem] overflow-hidden group hover:border-brand-primary/30 transition-all"
             >
               <button 
                 onClick={() => toggleOpen(index)}
-                className="w-full text-left px-6 py-5 flex items-center justify-between focus:outline-none"
+                className="w-full text-left px-8 py-6 flex items-center justify-between focus:outline-none"
               >
-                <span className="text-lg font-medium text-brand-text pr-8">{faq.question}</span>
+                <span className="text-lg font-outfit font-bold text-white pr-8 group-hover:text-brand-primary transition-colors">{faq.question}</span>
                 <motion.div
                   animate={{ rotate: openIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                   className="text-brand-primary flex-shrink-0"
                 >
-                  <ChevronDown className="w-5 h-5" />
+                  <ChevronDown className="w-6 h-6" />
                 </motion.div>
               </button>
               
@@ -70,7 +68,7 @@ export default function FAQ() {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
-                    <div className="px-6 pb-6 text-brand-text/70 font-light leading-relaxed border-t border-brand-primary/10 pt-4">
+                    <div className="px-8 pb-8 text-white/50 font-light leading-relaxed border-t border-white/5 pt-6">
                       {faq.answer}
                     </div>
                   </motion.div>

@@ -1,11 +1,13 @@
+import Lenis from 'lenis';
 import { useEffect } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
-import CustomCursor from './components/ui/CustomCursor';
+
 import BackgroundCarousel from './components/BackgroundCarousel';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import LogosMarquee from './components/ui/LogosMarquee';
 import WhoItsFor from './components/WhoItsFor';
+import BusinessDiagnostic from './components/BusinessDiagnostic';
 import ServiceOffering from './components/ServiceOffering';
 import ROICalculator from './components/ROICalculator';
 import InteractiveCaseStudies from './components/InteractiveCaseStudies';
@@ -18,6 +20,26 @@ import Footer from './components/Footer';
 
 function App() {
   useEffect(() => {
+    // Initialize Lenis
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    // Intersection Observer for fade-in animations
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -32,7 +54,10 @@ function App() {
     const elements = document.querySelectorAll('.fade-in-up');
     elements.forEach((el) => observer.observe(el));
 
-    return () => observer.disconnect();
+    return () => {
+      lenis.destroy();
+      observer.disconnect();
+    };
   }, []);
 
   const scrollToForm = () => {
@@ -42,11 +67,11 @@ function App() {
 
   return (
     <HelmetProvider>
-      <div className="min-h-screen bg-transparent overflow-hidden">
+      <div className="min-h-screen bg-brand-obsidian overflow-hidden selection:bg-brand-primary/30 selection:text-brand-primary">
         <BackgroundCarousel />
-        <CustomCursor />
+
         <Helmet>
-          <title>Thorne | Automated B2B Infrastructure</title>
+          <title>Thorne | Autonomous B2B Infrastructure</title>
           <meta name="description" content="Stop doing manual work. Let our modern backend workflows accelerate your business with instant, real-time data syncs and zero errors." />
         </Helmet>
         
@@ -54,10 +79,11 @@ function App() {
         <Hero onCTAClick={scrollToForm} />
         <LogosMarquee />
         <WhoItsFor />
+        <BusinessDiagnostic />
         <ServiceOffering />
-        <ROICalculator />
         <InteractiveCaseStudies />
         <Process />
+        <ROICalculator />
         <Credibility />
         <TestimonialsCarousel />
         <FAQ />
