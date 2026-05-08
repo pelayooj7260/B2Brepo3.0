@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, ClipboardList, Zap, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Zap, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 export default function InteractiveCaseStudies() {
   return (

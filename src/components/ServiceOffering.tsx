@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Zap, Clock, TrendingUp, Layers, MousePointer2, ShieldCheck } from 'lucide-react';
+import { Zap, Clock, Layers, MousePointer2, ShieldCheck } from 'lucide-react';
 
 export default function ServiceOffering() {
   const containerVariants = {
