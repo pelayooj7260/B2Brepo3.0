@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Building2, Users, Rocket, Globe, CheckCircle2, ChevronRight, Briefcase, ShoppingCart, Home, Cpu, HeartPulse, Palette } from 'lucide-react';
 
 type Step = 1 | 2 | 3;
@@ -29,7 +29,7 @@ export default function BusinessDiagnostic({ onComplete }: BusinessDiagnosticPro
     { id: 'creative', label: 'Creative Agencies', icon: <Palette className="w-6 h-6" /> },
   ];
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0, scale: 0.95 },
     visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
     exit: { opacity: 0, scale: 1.05, transition: { duration: 0.3, ease: "easeIn" } },

@@ -1,5 +1,5 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Send, ArrowRight, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { submitAuditRequest, type AuditRequest } from '../lib/submitForm';
 
@@ -78,7 +78,7 @@ export default function AuditForm({ prefilledDiagnostic }: AuditFormProps) {
     }
   };
 
-  const formVariants = {
+  const formVariants: Variants = {
     hidden: { opacity: 0, x: 20 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } },
     exit: { opacity: 0, x: -20, transition: { duration: 0.3 } }
