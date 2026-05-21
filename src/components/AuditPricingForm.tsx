@@ -19,6 +19,7 @@ export default function AuditPricingForm({
 }: AuditPricingFormProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [company, setCompany] = useState('');
   const [currentTools, setCurrentTools] = useState('');
   const [selectedPainPoints, setSelectedPainPoints] = useState<string[]>([]);
   const [customPainPoint, setCustomPainPoint] = useState('');
@@ -53,13 +54,22 @@ export default function AuditPricingForm({
       finalPainPoints.push(customPainPoint.trim());
     }
 
+    const nameParts = name.trim().split(/\s+/);
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
     const payload: PricingAuditRequest = {
       name,
+      firstName,
+      lastName,
       email,
+      company: company.trim(),
+      message: `Tools in Use: ${currentTools.trim()}\nPain Points: ${finalPainPoints.join(', ')}`,
       businessSize: selectedSize,
       currentTools: currentTools.trim(),
       painPoints: finalPainPoints.join(', '),
-      productType: 'Business Infrastructure Audit'
+      productType: 'Business Infrastructure Audit',
+      source: 'audit_pricing'
     };
 
     try {
@@ -69,6 +79,7 @@ export default function AuditPricingForm({
       // Reset form
       setName('');
       setEmail('');
+      setCompany('');
       setCurrentTools('');
       setSelectedPainPoints([]);
       setCustomPainPoint('');
@@ -128,7 +139,7 @@ export default function AuditPricingForm({
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Name */}
                 <div>
                   <label htmlFor="p-name" className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 font-mono">
@@ -157,6 +168,22 @@ export default function AuditPricingForm({
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder="alex@company.com"
+                    className="w-full px-5 py-3.5 bg-brand-obsidian/75 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-primary transition-all duration-300 font-sans"
+                  />
+                </div>
+
+                {/* Company Name */}
+                <div>
+                  <label htmlFor="p-company" className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 font-mono">
+                    Company Name
+                  </label>
+                  <input
+                    type="text"
+                    id="p-company"
+                    required
+                    value={company}
+                    onChange={e => setCompany(e.target.value)}
+                    placeholder="Acme Corp"
                     className="w-full px-5 py-3.5 bg-brand-obsidian/75 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-primary transition-all duration-300 font-sans"
                   />
                 </div>

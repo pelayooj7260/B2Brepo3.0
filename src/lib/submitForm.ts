@@ -64,11 +64,16 @@ export async function submitAuditRequest(data: AuditRequest): Promise<void> {
 
 export interface PricingAuditRequest {
   name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  company?: string;
+  message?: string;
   businessSize: string;
   currentTools: string;
   painPoints: string;
   productType: string;
+  source: string;
 }
 
 export async function submitPricingAuditRequest(data: PricingAuditRequest): Promise<void> {
