@@ -83,7 +83,10 @@ export default function AuditPricingPage() {
     <div className="relative text-white font-sans selection:bg-brand-primary/30 selection:text-brand-primary">
       <Helmet>
         <title>Business Infrastructure Audit Pricing | Thorne</title>
-        <meta name="description" content="Identify inefficiencies, risk vectors, and custom automation opportunities. Choose the scale right for your operation." />
+        <meta name="description" content="Business Infrastructure Audit: Identify inefficiencies, bottlenecks, failure points, and automation opportunities across your systems. Actionable roadmaps and full blueprints delivered in 3–7 days, starting at $249." />
+        <meta property="og:title" content="Business Infrastructure Audit Pricing | Thorne" />
+        <meta property="og:description" content="Identify inefficiencies, bottlenecks, failure points, and automation opportunities across your systems. Blueprints in 3–7 days." />
+        <meta property="og:type" content="website" />
       </Helmet>
 
       {/* Floating CMS Version Control Indicator */}
