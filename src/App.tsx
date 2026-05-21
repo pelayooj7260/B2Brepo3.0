@@ -17,6 +17,7 @@ import TestimonialsCarousel from './components/TestimonialsCarousel';
 import FAQ from './components/FAQ';
 import AuditForm from './components/AuditForm';
 import Footer from './components/Footer';
+import AuditPricingPage from './components/AuditPricingPage';
 
 function App() {
   const [diagnosticData, setDiagnosticData] = useState<{
@@ -24,6 +25,7 @@ function App() {
     sector: string;
     score: number;
   } | null>(null);
+  const [isPricingPage, setIsPricingPage] = useState(false);
 
   useEffect(() => {
     // Initialize Lenis
@@ -45,6 +47,14 @@ function App() {
 
     requestAnimationFrame(raf);
 
+    // Route checking function
+    const handleNavigation = () => {
+      setIsPricingPage(window.location.search.includes('page=audit-pricing'));
+    };
+
+    handleNavigation();
+    window.addEventListener('popstate', handleNavigation);
+
     // Intersection Observer for fade-in animations
     const observer = new IntersectionObserver(
       (entries) => {
@@ -63,6 +73,7 @@ function App() {
     return () => {
       lenis.destroy();
       observer.disconnect();
+      window.removeEventListener('popstate', handleNavigation);
     };
   }, []);
 
@@ -82,18 +93,25 @@ function App() {
         </Helmet>
         
         <Navbar />
-        <Hero onCTAClick={scrollToForm} />
-        <LogosMarquee />
-        <WhoItsFor />
-        <BusinessDiagnostic onComplete={(data) => setDiagnosticData(data)} />
-        <ServiceOffering />
-        <InteractiveCaseStudies />
-        <Process />
-        <ROICalculator />
-        <Credibility />
-        <TestimonialsCarousel />
-        <FAQ />
-        <AuditForm prefilledDiagnostic={diagnosticData} />
+
+        {isPricingPage ? (
+          <AuditPricingPage />
+        ) : (
+          <>
+            <Hero onCTAClick={scrollToForm} />
+            <LogosMarquee />
+            <WhoItsFor />
+            <BusinessDiagnostic onComplete={(data) => setDiagnosticData(data)} />
+            <ServiceOffering />
+            <InteractiveCaseStudies />
+            <Process />
+            <ROICalculator />
+            <Credibility />
+            <TestimonialsCarousel />
+            <FAQ />
+            <AuditForm prefilledDiagnostic={diagnosticData} />
+          </>
+        )}
         <Footer />
         <button
           onClick={() => { throw new Error("Sentry Test Error: DEBUG_SENTRY_TRIGGER clicked"); }}

@@ -61,3 +61,37 @@ export async function submitAuditRequest(data: AuditRequest): Promise<void> {
     throw new Error(`Submission failed (${res.status}): ${text}`);
   }
 }
+
+export interface PricingAuditRequest {
+  name: string;
+  email: string;
+  businessSize: string;
+  currentTools: string;
+  painPoints: string;
+  productType: string;
+}
+
+export async function submitPricingAuditRequest(data: PricingAuditRequest): Promise<void> {
+  const url = MODE === 'webhook' ? WEBHOOK_URL : API_URL;
+
+  if (!url) {
+    throw new Error(
+      `VITE_${MODE === 'webhook' ? 'WEBHOOK_URL' : 'API_URL'} is not set. ` +
+      `Add it to your .env file.`
+    );
+  }
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      ...data,
+      submitted_at: new Date().toISOString(),
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => res.statusText);
+    throw new Error(`Submission failed (${res.status}): ${text}`);
+  }
+}
