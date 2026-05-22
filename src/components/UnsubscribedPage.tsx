@@ -18,6 +18,7 @@ export default function UnsubscribedPage() {
   const handleGoHome = (e: React.MouseEvent) => {
     e.preventDefault();
     const url = new URL(window.location.href);
+    url.pathname = '/';
     url.searchParams.delete('page');
     window.history.pushState({}, '', url.toString());
     window.dispatchEvent(new Event('popstate'));

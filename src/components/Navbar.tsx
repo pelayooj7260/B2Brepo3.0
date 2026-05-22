@@ -10,8 +10,16 @@ export default function Navbar() {
 
   useEffect(() => {
     const checkPage = () => {
-      setIsPricingPage(window.location.search.includes('page=audit-pricing'));
-      setIsUnsubscribedPage(window.location.search.includes('page=unsubscribed'));
+      setIsPricingPage(
+        window.location.search.includes('page=audit-pricing') ||
+        window.location.pathname === '/audit-pricing' ||
+        window.location.pathname === '/audit-pricing/'
+      );
+      setIsUnsubscribedPage(
+        window.location.search.includes('page=unsubscribed') ||
+        window.location.pathname === '/unsubscribed' ||
+        window.location.pathname === '/unsubscribed/'
+      );
     };
     checkPage();
     window.addEventListener('popstate', checkPage);
@@ -30,6 +38,7 @@ export default function Navbar() {
   const navigateTo = (e: React.MouseEvent, page: 'home' | 'pricing') => {
     e.preventDefault();
     const url = new URL(window.location.href);
+    url.pathname = '/';
     if (page === 'pricing') {
       url.searchParams.set('page', 'audit-pricing');
     } else {

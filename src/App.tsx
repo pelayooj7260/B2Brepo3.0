@@ -51,8 +51,16 @@ function App() {
 
     // Route checking function
     const handleNavigation = () => {
-      setIsPricingPage(window.location.search.includes('page=audit-pricing'));
-      setIsUnsubscribedPage(window.location.search.includes('page=unsubscribed'));
+      setIsPricingPage(
+        window.location.search.includes('page=audit-pricing') ||
+        window.location.pathname === '/audit-pricing' ||
+        window.location.pathname === '/audit-pricing/'
+      );
+      setIsUnsubscribedPage(
+        window.location.search.includes('page=unsubscribed') ||
+        window.location.pathname === '/unsubscribed' ||
+        window.location.pathname === '/unsubscribed/'
+      );
     };
 
     handleNavigation();
