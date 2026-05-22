@@ -18,6 +18,7 @@ import FAQ from './components/FAQ';
 import AuditForm from './components/AuditForm';
 import Footer from './components/Footer';
 import AuditPricingPage from './components/AuditPricingPage';
+import UnsubscribedPage from './components/UnsubscribedPage';
 
 function App() {
   const [diagnosticData, setDiagnosticData] = useState<{
@@ -26,6 +27,7 @@ function App() {
     score: number;
   } | null>(null);
   const [isPricingPage, setIsPricingPage] = useState(false);
+  const [isUnsubscribedPage, setIsUnsubscribedPage] = useState(false);
 
   useEffect(() => {
     // Initialize Lenis
@@ -50,6 +52,7 @@ function App() {
     // Route checking function
     const handleNavigation = () => {
       setIsPricingPage(window.location.search.includes('page=audit-pricing'));
+      setIsUnsubscribedPage(window.location.search.includes('page=unsubscribed'));
     };
 
     handleNavigation();
@@ -94,7 +97,9 @@ function App() {
         
         <Navbar />
 
-        {isPricingPage ? (
+        {isUnsubscribedPage ? (
+          <UnsubscribedPage />
+        ) : isPricingPage ? (
           <AuditPricingPage />
         ) : (
           <>

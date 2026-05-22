@@ -6,10 +6,12 @@ export default function Navbar() {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
   const [isPricingPage, setIsPricingPage] = useState(false);
+  const [isUnsubscribedPage, setIsUnsubscribedPage] = useState(false);
 
   useEffect(() => {
     const checkPage = () => {
       setIsPricingPage(window.location.search.includes('page=audit-pricing'));
+      setIsUnsubscribedPage(window.location.search.includes('page=unsubscribed'));
     };
     checkPage();
     window.addEventListener('popstate', checkPage);
@@ -72,7 +74,9 @@ export default function Navbar() {
           </a>
           
           <div className="hidden md:flex items-center gap-8">
-            {isPricingPage ? (
+            {isUnsubscribedPage ? (
+              <a href="/" onClick={(e) => navigateTo(e, 'home')} className="text-xs font-medium text-white/70 hover:text-brand-primary transition-colors uppercase tracking-widest">Home</a>
+            ) : isPricingPage ? (
               <>
                 <a href="/" onClick={(e) => navigateTo(e, 'home')} className="text-xs font-medium text-white/70 hover:text-brand-primary transition-colors uppercase tracking-widest">Home</a>
                 <a href="#pricing-tiers-section" className="text-xs font-medium text-white/70 hover:text-brand-primary transition-colors uppercase tracking-widest">Pricing</a>
@@ -93,10 +97,16 @@ export default function Navbar() {
             <div className="h-4 w-px bg-white/10" />
             <ThemeToggle />
             <button 
-              onClick={handleCTAClick}
+              onClick={(e) => {
+                if (isUnsubscribedPage) {
+                  navigateTo(e as any, 'home');
+                } else {
+                  handleCTAClick();
+                }
+              }}
               className="text-xs font-bold bg-brand-primary text-brand-obsidian px-5 py-2.5 rounded-full hover:scale-105 transition-transform active:scale-95 shadow-[0_0_20px_rgba(0,242,255,0.3)]"
             >
-              {isPricingPage ? 'Request Audit' : 'Analyze Your Business'}
+              {isUnsubscribedPage ? 'Go Home' : isPricingPage ? 'Request Audit' : 'Analyze Your Business'}
             </button>
           </div>
         </div>
