@@ -11,7 +11,11 @@ import {
   Activity, 
   Clock, 
   ShieldAlert, 
-  Compass 
+  Compass,
+  ShieldCheck,
+  AlertCircle,
+  Sparkles,
+  X
 } from 'lucide-react';
 import { getPageVersion } from '../data/auditPricingPage';
 import { trackCTAClick, useScrollDepthTracker } from '../lib/analytics';
@@ -34,15 +38,46 @@ export default function AuditPricingPage() {
   const [selectedTier, setSelectedTier] = useState<string>('');
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
+  // Stripe Payment States
+  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'success' | 'cancel'>('idle');
+  const [paidTier, setPaidTier] = useState<string>('');
+  const [paidEmail, setPaidEmail] = useState<string>('');
+
   // Activate scroll tracking hook
   useScrollDepthTracker('Business Infrastructure Audit Pricing Page');
 
-  // Sync CMS version from query parameter if present
+  // Sync CMS version and check Stripe payment redirects
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const v = params.get('v');
     if (v === '1.0' || v === '1.1') {
       setCmsVersion(v as '1.0' | '1.1');
+    }
+
+    const payment = params.get('payment');
+    if (payment === 'success') {
+      setPaymentStatus('success');
+      setPaidTier(params.get('tier') || '');
+      setPaidEmail(params.get('email') || '');
+      
+      // Clean up URL parameters silently
+      const url = new URL(window.location.href);
+      url.searchParams.delete('payment');
+      url.searchParams.delete('tier');
+      url.searchParams.delete('email');
+      window.history.replaceState({}, '', url.toString());
+    } else if (payment === 'cancel') {
+      setPaymentStatus('cancel');
+      
+      // Clean up URL parameters silently
+      const url = new URL(window.location.href);
+      url.searchParams.delete('payment');
+      window.history.replaceState({}, '', url.toString());
+      
+      const timer = setTimeout(() => {
+        setPaymentStatus('idle');
+      }, 7000);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -484,6 +519,129 @@ export default function AuditPricingPage() {
         }}
         availablePainPoints={pageData.painPoints}
       />
+
+      {/* Cancellation Toast Notification */}
+      <AnimatePresence>
+        {paymentStatus === 'cancel' && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 right-6 z-50 glass-card p-4 rounded-2xl border border-red-500/30 bg-red-950/20 shadow-2xl flex items-center gap-4 max-w-sm"
+          >
+            <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center text-red-400 flex-shrink-0">
+              <AlertCircle className="w-5 h-5" />
+            </div>
+            <div className="flex-1">
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-outfit">Transaction Aborted</h4>
+              <p className="text-xs text-white/70 mt-0.5 leading-relaxed font-light">
+                The payment session was canceled. Feel free to re-configure and try again!
+              </p>
+            </div>
+            <button
+              onClick={() => setPaymentStatus('idle')}
+              className="text-white/40 hover:text-white transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Payment Success Overlay Modal */}
+      <AnimatePresence>
+        {paymentStatus === 'success' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-6 bg-brand-obsidian/95 backdrop-blur-2xl overflow-y-auto"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+              transition={{ type: "spring", damping: 25, stiffness: 180 }}
+              className="glass-card rounded-[2.5rem] border border-brand-primary/30 max-w-xl w-full p-8 md:p-12 text-center relative overflow-hidden shadow-[0_0_80px_rgba(0,242,255,0.2)]"
+            >
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-primary to-transparent" />
+              
+              <div className="flex flex-col items-center space-y-6">
+                <div className="relative">
+                  <div className="w-20 h-20 bg-brand-primary/10 rounded-full flex items-center justify-center text-brand-primary shadow-[0_0_40px_rgba(0,242,255,0.3)] border border-brand-primary/20">
+                    <ShieldCheck className="w-10 h-10" />
+                  </div>
+                  <motion.div 
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                    className="absolute -inset-1 border border-dashed border-brand-primary/30 rounded-full pointer-events-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <span className="text-brand-primary font-mono text-xs uppercase tracking-[0.3em] font-bold">
+                    System Protocol Active
+                  </span>
+                  <h2 className="text-3xl md:text-4xl font-outfit font-extrabold text-white uppercase tracking-wider leading-none">
+                    Audit Initialized
+                  </h2>
+                </div>
+
+                <p className="text-sm text-white/60 leading-relaxed max-w-md font-light">
+                  Thank you! Your payment was verified securely. Our automation engine has spun up your reconnaissance workspace.
+                </p>
+
+                <div className="w-full bg-brand-obsidian/70 border border-white/5 rounded-2xl p-5 text-left space-y-3 font-sans">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-white/40 uppercase tracking-widest font-mono">Tier Type</span>
+                    <span className="text-brand-primary font-bold uppercase tracking-wider font-mono">
+                      {paidTier === 'starter' && 'Starter Audit ($249)'}
+                      {paidTier === 'full' && 'Full Infrastructure Audit ($499)'}
+                      {paidTier === 'enterprise' && 'Enterprise Audit ($1200)'}
+                      {!paidTier && 'Transformation Audit'}
+                    </span>
+                  </div>
+                  <div className="w-full h-[1px] bg-white/5" />
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-white/40 uppercase tracking-widest font-mono">Contact Email</span>
+                    <span className="text-white font-medium truncate max-w-[200px]">{paidEmail || 'N/A'}</span>
+                  </div>
+                  <div className="w-full h-[1px] bg-white/5" />
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-white/40 uppercase tracking-widest font-mono">Estimated Turnaround</span>
+                    <span className="text-brand-secondary font-bold font-mono">3–7 Business Days</span>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 text-left bg-brand-primary/5 border border-brand-primary/10 rounded-xl p-4 text-xs text-white/80 leading-relaxed w-full">
+                  <Sparkles className="w-4 h-4 text-brand-primary flex-shrink-0 mt-0.5 animate-pulse" />
+                  <div>
+                    <span className="font-bold text-white block mb-0.5">What happens next?</span>
+                    An operational setup briefing has been generated. We will coordinate your dashboard generation and reach out via email.
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3 w-full pt-4">
+                  <a
+                    href="https://calendly.com/ojpadvertisement/appointment-demo"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-4 bg-brand-primary text-brand-obsidian rounded-2xl font-bold font-outfit uppercase tracking-wider text-xs md:text-sm text-center shadow-[0_0_20px_rgba(0,242,255,0.25)] hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                  >
+                    Schedule Audit Alignment Call
+                  </a>
+                  <button
+                    onClick={() => setPaymentStatus('idle')}
+                    className="w-full py-3.5 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-colors"
+                  >
+                    Return to Portal
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

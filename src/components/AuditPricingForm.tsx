@@ -46,6 +46,13 @@ export default function AuditPricingForm({
     setStatus('idle');
     setErrorMessage('');
 
+    if (!selectedTier) {
+      setStatus('error');
+      setErrorMessage('Please select a pricing tier above before initiating the payment protocol.');
+      setIsSubmitting(false);
+      return;
+    }
+
     const duration = Date.now() - renderTimeRef.current;
     
     // Combine checked pain points and any custom ones
@@ -58,35 +65,41 @@ export default function AuditPricingForm({
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
 
-    const payload: PricingAuditRequest = {
+    const payload = {
       name,
       firstName,
       lastName,
       email,
       company: company.trim(),
-      message: `Tools in Use: ${currentTools.trim()}\nPain Points: ${finalPainPoints.join(', ')}`,
       businessSize: selectedSize,
       currentTools: currentTools.trim(),
       painPoints: finalPainPoints.join(', '),
       productType: 'Business Infrastructure Audit',
+      selectedTier,
       source: 'audit_pricing'
     };
 
     try {
-      await submitPricingAuditRequest(payload);
-      setStatus('success');
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to initiate secure checkout session.');
+      }
+
+      const { url } = await response.json();
       trackFormSubmission('success', duration, { businessSize: selectedSize, selectedTier });
-      // Reset form
-      setName('');
-      setEmail('');
-      setCompany('');
-      setCurrentTools('');
-      setSelectedPainPoints([]);
-      setCustomPainPoint('');
+      
+      // Redirect browser directly to secure Stripe Checkout
+      window.location.href = url;
     } catch (err: any) {
       console.error(err);
       setStatus('error');
-      setErrorMessage(err.message || 'Failed to submit the request. Please try again.');
+      setErrorMessage(err.message || 'Failed to initialize secure payment. Please try again.');
       trackFormSubmission('error', duration, { businessSize: selectedSize, selectedTier, error: err.message });
     } finally {
       setIsSubmitting(false);
@@ -312,10 +325,15 @@ export default function AuditPricingForm({
                   }`}
                 >
                   {isSubmitting ? (
-                    'Processing Request...'
+                    'Redirecting to Stripe...'
+                  ) : selectedTier ? (
+                    <>
+                      Proceed to Stripe Payment
+                      <Send className="w-4 h-4 ml-1" />
+                    </>
                   ) : (
                     <>
-                      Request Infrastructure Audit
+                      Select a Pricing Tier Above
                       <Send className="w-4 h-4 ml-1" />
                     </>
                   )}
