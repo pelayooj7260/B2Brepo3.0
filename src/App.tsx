@@ -19,6 +19,7 @@ import AuditForm from './components/AuditForm';
 import Footer from './components/Footer';
 import AuditPricingPage from './components/AuditPricingPage';
 import UnsubscribedPage from './components/UnsubscribedPage';
+import SuccessPage from './components/SuccessPage';
 
 function App() {
   const [diagnosticData, setDiagnosticData] = useState<{
@@ -28,6 +29,7 @@ function App() {
   } | null>(null);
   const [isPricingPage, setIsPricingPage] = useState(false);
   const [isUnsubscribedPage, setIsUnsubscribedPage] = useState(false);
+  const [isSuccessPage, setIsSuccessPage] = useState(false);
 
   useEffect(() => {
     // Initialize Lenis
@@ -53,13 +55,21 @@ function App() {
     const handleNavigation = () => {
       setIsPricingPage(
         window.location.search.includes('page=audit-pricing') ||
+        window.location.search.includes('page=apply') ||
         window.location.pathname === '/audit-pricing' ||
-        window.location.pathname === '/audit-pricing/'
+        window.location.pathname === '/audit-pricing/' ||
+        window.location.pathname === '/apply' ||
+        window.location.pathname === '/apply/'
       );
       setIsUnsubscribedPage(
         window.location.search.includes('page=unsubscribed') ||
         window.location.pathname === '/unsubscribed' ||
         window.location.pathname === '/unsubscribed/'
+      );
+      setIsSuccessPage(
+        window.location.search.includes('page=success') ||
+        window.location.pathname === '/success' ||
+        window.location.pathname === '/success/'
       );
     };
 
@@ -88,9 +98,13 @@ function App() {
     };
   }, []);
 
-  const scrollToForm = () => {
-    const formElement = document.getElementById('audit-form');
-    formElement?.scrollIntoView({ behavior: 'smooth' });
+  const navigateToApply = () => {
+    const url = new URL(window.location.href);
+    url.pathname = '/';
+    url.search = '?page=apply';
+    window.history.pushState({}, '', url.toString());
+    window.dispatchEvent(new Event('popstate'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -107,11 +121,13 @@ function App() {
 
         {isUnsubscribedPage ? (
           <UnsubscribedPage />
+        ) : isSuccessPage ? (
+          <SuccessPage />
         ) : isPricingPage ? (
           <AuditPricingPage />
         ) : (
           <>
-            <Hero onCTAClick={scrollToForm} />
+            <Hero onCTAClick={navigateToApply} />
             <LogosMarquee />
             <WhoItsFor />
             <BusinessDiagnostic onComplete={(data) => setDiagnosticData(data)} />

@@ -172,7 +172,18 @@ export default function BusinessDiagnostic({ onComplete }: BusinessDiagnosticPro
                 </div>
 
                 <button 
-                  onClick={() => document.getElementById('audit-form')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => {
+                    let mappedSize = '1-10';
+                    if (scale === 'growth') mappedSize = '11-50';
+                    else if (scale === 'enterprise') mappedSize = '50+';
+                    
+                    const url = new URL(window.location.href);
+                    url.pathname = '/';
+                    url.search = `?page=apply&size=${mappedSize}&sector=${sector}&score=${calculateScore()}`;
+                    window.history.pushState({}, '', url.toString());
+                    window.dispatchEvent(new Event('popstate'));
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   className="bg-white text-brand-obsidian px-10 py-4 rounded-full font-bold hover:bg-brand-primary transition-colors flex items-center gap-3 mx-auto"
                 >
                   Get My Full Audit RoadMap
