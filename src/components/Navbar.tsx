@@ -12,8 +12,11 @@ export default function Navbar() {
     const checkPage = () => {
       setIsPricingPage(
         window.location.search.includes('page=audit-pricing') ||
+        window.location.search.includes('page=apply') ||
         window.location.pathname === '/audit-pricing' ||
-        window.location.pathname === '/audit-pricing/'
+        window.location.pathname === '/audit-pricing/' ||
+        window.location.pathname === '/apply' ||
+        window.location.pathname === '/apply/'
       );
       setIsUnsubscribedPage(
         window.location.search.includes('page=unsubscribed') ||
@@ -40,7 +43,7 @@ export default function Navbar() {
     const url = new URL(window.location.href);
     url.pathname = '/';
     if (page === 'pricing') {
-      url.searchParams.set('page', 'audit-pricing');
+      url.searchParams.set('page', 'apply');
     } else {
       url.searchParams.delete('page');
     }
@@ -54,8 +57,12 @@ export default function Navbar() {
       const formSec = document.getElementById('pricing-form-section');
       formSec?.scrollIntoView({ behavior: 'smooth' });
     } else {
-      const formElement = document.getElementById('audit-form');
-      formElement?.scrollIntoView({ behavior: 'smooth' });
+      const url = new URL(window.location.href);
+      url.pathname = '/';
+      url.searchParams.set('page', 'apply');
+      window.history.pushState({}, '', url.toString());
+      window.dispatchEvent(new Event('popstate'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -95,7 +102,7 @@ export default function Navbar() {
                 <a href="#how-it-works" className="text-xs font-medium text-white/70 hover:text-brand-primary transition-colors uppercase tracking-widest">Process</a>
                 <a href="#benefits" className="text-xs font-medium text-white/70 hover:text-brand-primary transition-colors uppercase tracking-widest">Benefits</a>
                 <a 
-                  href="?page=audit-pricing" 
+                  href="?page=apply" 
                   onClick={(e) => navigateTo(e, 'pricing')} 
                   className="text-xs font-medium text-white/70 hover:text-brand-primary transition-colors uppercase tracking-widest"
                 >

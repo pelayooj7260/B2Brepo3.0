@@ -65,8 +65,8 @@ export default async function handler(
       mode: 'payment',
       customer_email: email,
       // Strip existing query params from referer and append payment state params
-      success_url: `${origin.split('?')[0]}?payment=success&tier=${selectedTier}&email=${encodeURIComponent(email)}`,
-      cancel_url: `${origin.split('?')[0]}?payment=cancel`,
+      success_url: `${origin.split('?')[0]}?page=success&tier=${selectedTier}&email=${encodeURIComponent(email)}`,
+      cancel_url: `${origin.split('?')[0]}?page=apply&payment=cancel`,
       metadata: {
         name,
         firstName,
